@@ -1,9 +1,7 @@
-package com.example.android.todoapp.recyclerView
+package com.example.android.todoapp.recyclerview
 
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.databinding.BindingAdapter
-import com.example.android.todoapp.database.AppDatabaseDao
 import com.example.android.todoapp.database.Task
 
 

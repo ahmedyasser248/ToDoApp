@@ -1,7 +1,6 @@
-package com.example.android.todoapp.recyclerView
+package com.example.android.todoapp.recyclerview
 
 
-import android.renderscript.ScriptGroup
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

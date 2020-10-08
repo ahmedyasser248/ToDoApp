@@ -1,4 +1,4 @@
-package com.example.android.todoapp.recyclerView
+package com.example.android.todoapp.recyclerview
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
