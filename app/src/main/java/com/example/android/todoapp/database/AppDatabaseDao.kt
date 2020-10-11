@@ -41,7 +41,7 @@ interface AppDatabaseDao {
     @Query("SELECT * FROM task_table Where task_category = :categoryId ORDER BY task_id DESC")
     fun getTasksWithCategory(categoryId: Long): LiveData<List<Task>>
 
-    /*@Query("SELECT * FROM task_table Where task_listing_time >= :listingTime AND task_dequeue_time <= task_dequeue_time ORDER BY task_id DESC")
-    fun getTasksWithDateRange(listingTime: Long, dequeueTime: Long): LiveData<List<Task>>*/
+    @Query("SELECT * FROM task_table Where task_listing_time >= :listingTime AND task_dequeue_time <= :dequeueTime ORDER BY task_id DESC")
+    fun getTasksWithDateRange(listingTime: Long, dequeueTime: Long): LiveData<List<Task>>
 
 }
