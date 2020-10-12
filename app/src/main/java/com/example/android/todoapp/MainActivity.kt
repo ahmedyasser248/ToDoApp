@@ -8,9 +8,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-         setContentView(R.layout.activity_main)
-       val dataSource = AppDatabase.getInstance(application).appDatabaseDao
+        setContentView(R.layout.activity_main)
+        val dataSource = AppDatabase.getInstance(application).appDatabaseDao
 
 
     }
