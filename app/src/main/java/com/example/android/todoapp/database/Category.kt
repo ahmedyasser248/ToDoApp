@@ -10,6 +10,9 @@ data class Category  (
     @ColumnInfo(name = "category_id")
     var categoryId: Long = 0L,
 
+    @ColumnInfo(name = "category_title")
+    var categoryTitle: String,
+
     @ColumnInfo(name = "category_color")
     var categoryColor: Long = 0L
 )
