@@ -2,4 +2,23 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation" />
+    android:id="@+id/navigation"
+    app:startDestination="@id/tasksFragment">
+    <fragment
+        android:id="@+id/tasksFragment"
+        android:name="com.example.android.todoapp.recyclerview.TasksFragment"
+        android:label="TasksFragment" >
+        <action
+            android:id="@+id/action_tasksFragment_to_tracker"
+            app:destination="@id/tracker" />
+    </fragment>
+    <fragment
+        android:id="@+id/tracker"
+        android:name="com.example.android.todoapp.Tracker"
+        android:label="fragment_tracker"
+        tools:layout="@layout/fragment_tracker" >
+        <action
+            android:id="@+id/action_tracker_to_tasksFragment"
+            app:destination="@id/tasksFragment" />
+    </fragment>
+</navigation>
