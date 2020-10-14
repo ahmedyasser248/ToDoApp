@@ -30,10 +30,10 @@ data class Task  (
     var status: Short = 0,
 
     @ColumnInfo(name = "task_listing_time")
-    val listingTime: Long =  System.currentTimeMillis(),
+    var listingTime: Long =  System.currentTimeMillis(),
 
     @ColumnInfo(name = "task_dequeue_time")
-    val dequeueTime: Long =  0L,
+    var dequeueTime: Long =  0L,
 
     @ColumnInfo(name = "task_category")
     var categoryId: Long = 0L
