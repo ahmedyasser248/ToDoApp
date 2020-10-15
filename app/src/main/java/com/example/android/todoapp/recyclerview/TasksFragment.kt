@@ -41,7 +41,7 @@ class TasksFragment : Fragment() {
 
 
         binding.TasksList.adapter=adapter
-        val category=Category(0)
+        val category=Category(0,"hello")
 
         val task1=Task(0,"hello","hello, my name is ahmed yasser",0,1312,123213,2)
         scope.launch {

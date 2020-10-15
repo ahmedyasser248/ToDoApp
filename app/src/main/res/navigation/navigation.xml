@@ -14,9 +14,9 @@
     </fragment>
     <fragment
         android:id="@+id/tracker"
-        android:name="com.example.android.todoapp.Tracker"
+        android:name="com.example.android.todoapp.tracker.TrackerFragment"
         android:label="fragment_tracker"
-        tools:layout="@layout/fragment_tracker" >
+        tools:layout="@layout/tracker_fragment" >
         <action
             android:id="@+id/action_tracker_to_tasksFragment"
             app:destination="@id/tasksFragment" />
