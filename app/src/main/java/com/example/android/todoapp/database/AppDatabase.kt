@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
+import java.util.concurrent.Executors
 
 @Database(entities = [Task::class, Category::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
@@ -23,7 +25,18 @@ abstract class AppDatabase : RoomDatabase() {
                         context.applicationContext,
                         AppDatabase::class.java,
                         "app_database"
-                    )
+                    ).addCallback(object : RoomDatabase.Callback() {
+                            override fun onCreate(db: SupportSQLiteDatabase) {
+                                println("Aywa wsl")
+                                super.onCreate(db)
+                                Executors.newSingleThreadScheduledExecutor()
+                                    .execute {
+                                        getInstance(context).appDatabaseDao.insertAllCategories(SampleData.populateCategoriesData())
+                                        getInstance(context).appDatabaseDao.insertAll(SampleData.populateTasksData())
+                                    }
+                            }
+
+                        })
                         .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance
@@ -33,5 +46,4 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
     }
-
 }
