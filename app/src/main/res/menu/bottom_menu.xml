@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/tasksFragment"
+        android:icon="@drawable/tasks_icon"
+        android:title="Tasks"
+        app:showAsAction="ifRoom"
+        />
+<item
+    android:id="@+id/tracker"
+    android:icon="@drawable/tracker_icon"
+    android:title="Progress"
+    app:showAsAction="ifRoom"
+    />
+
+
+</menu>
