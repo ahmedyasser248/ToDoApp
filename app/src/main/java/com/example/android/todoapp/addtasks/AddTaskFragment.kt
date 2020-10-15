@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.android.todoapp.R
+import kotlinx.android.synthetic.main.addtaskfragent.view.*
 
 class AddTaskFragment : Fragment() {
     override fun onCreateView(
@@ -13,6 +16,8 @@ class AddTaskFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        val binding : AddtaskfragmentBinding=DataBindingUtil.inflate(inflater,R.layout.addtaskfragent,container,false)
+
+
     }
 }
