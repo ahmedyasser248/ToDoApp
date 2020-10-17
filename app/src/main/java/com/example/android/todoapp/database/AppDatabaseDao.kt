@@ -12,7 +12,13 @@ interface AppDatabaseDao {
     fun insert(task: Task)
 
     @Insert
+    fun insertAll(tasks: List<Task>)
+
+    @Insert
     fun insert(category: Category)
+
+    @Insert
+    fun insertAllCategories(categories: List<Category>)
 
     @Update
     fun update(task: Task)
@@ -44,25 +50,26 @@ interface AppDatabaseDao {
     @Query("SELECT * FROM task_table Where task_listing_time >= :listingTime AND task_dequeue_time <= :dequeueTime ORDER BY task_id DESC")
     fun getTasksWithDateRange(listingTime: Long, dequeueTime: Long): LiveData<List<Task>>
 
-    @Query("SELECT count(*) " +
+    @Query("SELECT t.range, count(*) " +
             "from ( SELECT task_id, CASE " +
-            "WHEN task_listing_time >= :monthEndTime - (4*604800*1000) AND task_listing_time < :monthEndTime - (3*604800*1000) THEN 'Week 1' " +
-            "WHEN task_listing_time >= :monthEndTime - (3*604800*1000) AND task_listing_time < :monthEndTime - (2*604800*1000) THEN 'Week 2' " +
-            "WHEN task_listing_time >= :monthEndTime - (2*604800*1000) AND task_listing_time < :monthEndTime - (604800*1000) THEN 'Week 3' " +
-            "WHEN  task_listing_time >= :monthEndTime - (604800*1000) AND task_listing_time < :monthEndTime THEN 'Week 4' " +
-            "ELSE 'Not' end as range from task_table) t " +
+            "WHEN task_listing_time >= :monthEndTime - (4*604800*1000) AND task_listing_time < :monthEndTime - (3*604800*1000) THEN 1 " +
+            "WHEN task_listing_time >= :monthEndTime - (3*604800*1000) AND task_listing_time < :monthEndTime - (2*604800*1000) THEN 2 " +
+            "WHEN task_listing_time >= :monthEndTime - (2*604800*1000) AND task_listing_time < :monthEndTime - (604800*1000) THEN 3 " +
+            "WHEN  task_listing_time >= :monthEndTime - (604800*1000) AND task_listing_time < :monthEndTime THEN 4 " +
+            "ELSE 0 end as range from task_table Where task_listing_time >= :monthEndTime - (4*604800*1000) AND task_listing_time < :monthEndTime) t " +
             "GROUP BY t.range")
-    fun getTasksCountInMonthWeeks(monthEndTime: Long): List<Int>
+    fun getTasksCountInMonthWeeks(monthEndTime: Long): List<CountRecord>
 
-    @Query("SELECT count(*) " +
-            "from (SELECT task_id, CASE " +
-            "WHEN task_dequeue_time >= :monthEndTime - (4*604800*1000) AND task_dequeue_time < :monthEndTime - (3*604800*1000) THEN (:monthEndTime - (3*604800*1000)) " +
-            "WHEN task_dequeue_time >= :monthEndTime - (3*604800*1000) AND task_dequeue_time < :monthEndTime - (2*604800*1000) THEN (:monthEndTime - (2*604800*1000)) " +
-            "WHEN task_dequeue_time >= :monthEndTime - (2*604800*1000) AND task_dequeue_time < :monthEndTime - (604800*1000) THEN (:monthEndTime - (604800*1000)) " +
-            "WHEN task_dequeue_time >= :monthEndTime - (604800*1000) AND task_dequeue_time < :monthEndTime THEN (:monthEndTime) " +
-            "ELSE 'Not' end as range from task_table Where task_status = 1) t " +
+    @Query("SELECT t.range, count(*) " +
+            "from (SELECT count(*), CASE " +
+            "WHEN task_dequeue_time >= :monthEndTime - (4*604800*1000) AND task_dequeue_time < :monthEndTime - (3*604800*1000) THEN 1 " +
+            "WHEN task_dequeue_time >= :monthEndTime - (3*604800*1000) AND task_dequeue_time < :monthEndTime - (2*604800*1000) THEN 2 " +
+            "WHEN task_dequeue_time >= :monthEndTime - (2*604800*1000) AND task_dequeue_time < :monthEndTime - (604800*1000) THEN 3 " +
+            "WHEN task_dequeue_time >= :monthEndTime - (604800*1000) AND task_dequeue_time < :monthEndTime THEN 4 " +
+            "ELSE 0 end as range from task_table Where task_status = 1 AND task_dequeue_time >= :monthEndTime - (4*604800*1000) " +
+            "AND task_dequeue_time < :monthEndTime) t " +
             "GROUP BY t.range")
-    fun getTasksFinishedCountInMonthWeeks(monthEndTime: Long): List<Int>
+    fun getTasksFinishedCountInMonthWeeks(monthEndTime: Long): List<CountRecord>
 
     @Query("SELECT :monthEndTime")
     fun getTest(monthEndTime: Long): Long
@@ -70,5 +77,8 @@ interface AppDatabaseDao {
 
     @Query("SELECT * FROM task_table")
     fun getTasksInfo(): List<Task>
+
+    @Query("SELECT * FROM category_table")
+    fun getCategoriesInfo(): List<Category>
 
 }
