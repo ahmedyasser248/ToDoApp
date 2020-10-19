@@ -52,24 +52,24 @@ interface AppDatabaseDao {
 
     @Query("SELECT t.range, count(*) " +
             "from ( SELECT task_id, CASE " +
-            "WHEN task_listing_time >= :monthEndTime - (4*604800*1000) AND task_listing_time < :monthEndTime - (3*604800*1000) THEN 1 " +
-            "WHEN task_listing_time >= :monthEndTime - (3*604800*1000) AND task_listing_time < :monthEndTime - (2*604800*1000) THEN 2 " +
-            "WHEN task_listing_time >= :monthEndTime - (2*604800*1000) AND task_listing_time < :monthEndTime - (604800*1000) THEN 3 " +
-            "WHEN  task_listing_time >= :monthEndTime - (604800*1000) AND task_listing_time < :monthEndTime THEN 4 " +
-            "ELSE 0 end as range from task_table Where task_listing_time >= :monthEndTime - (4*604800*1000) AND task_listing_time < :monthEndTime) t " +
+            "WHEN task_listing_time >= :monthStartTime AND task_listing_time < :monthStartTime + (604800*1000) THEN 1 " +
+            "WHEN task_listing_time >= :monthStartTime + (604800*1000) AND task_listing_time < :monthStartTime + (2*604800*1000) THEN 2 " +
+            "WHEN task_listing_time >= :monthStartTime + (2*604800*1000) AND task_listing_time < :monthStartTime + (3*604800*1000) THEN 3 " +
+            "WHEN  task_listing_time >= :monthStartTime + (3*604800*1000) AND task_listing_time < :monthEndTime THEN 4 " +
+            "ELSE 0 end as range from task_table Where task_listing_time >= :monthStartTime AND task_listing_time < :monthEndTime) t " +
             "GROUP BY t.range")
-    fun getTasksCountInMonthWeeks(monthEndTime: Long): List<CountRecord>
+    fun getTasksCountInMonthWeeks(monthStartTime: Long ,monthEndTime: Long): List<CountRecord>
 
     @Query("SELECT t.range, count(*) " +
-            "from (SELECT count(*), CASE " +
-            "WHEN task_dequeue_time >= :monthEndTime - (4*604800*1000) AND task_dequeue_time < :monthEndTime - (3*604800*1000) THEN 1 " +
-            "WHEN task_dequeue_time >= :monthEndTime - (3*604800*1000) AND task_dequeue_time < :monthEndTime - (2*604800*1000) THEN 2 " +
-            "WHEN task_dequeue_time >= :monthEndTime - (2*604800*1000) AND task_dequeue_time < :monthEndTime - (604800*1000) THEN 3 " +
-            "WHEN task_dequeue_time >= :monthEndTime - (604800*1000) AND task_dequeue_time < :monthEndTime THEN 4 " +
-            "ELSE 0 end as range from task_table Where task_status = 1 AND task_dequeue_time >= :monthEndTime - (4*604800*1000) " +
+            "from (SELECT task_id, CASE " +
+            "WHEN task_dequeue_time >= :monthStartTime AND task_dequeue_time < :monthStartTime + (604800*1000) THEN 1 " +
+            "WHEN task_dequeue_time >= :monthStartTime + (604800*1000) AND task_dequeue_time < :monthStartTime + (2*604800*1000) THEN 2 " +
+            "WHEN task_dequeue_time >= :monthStartTime + (2*604800*1000) AND task_dequeue_time < :monthEndTime + (3*604800*1000) THEN 3 " +
+            "WHEN task_dequeue_time >= :monthEndTime + (3*604800*1000) AND task_dequeue_time < :monthEndTime THEN 4 " +
+            "ELSE 0 end as range from task_table Where task_status = 1 AND task_dequeue_time >= :monthStartTime " +
             "AND task_dequeue_time < :monthEndTime) t " +
             "GROUP BY t.range")
-    fun getTasksFinishedCountInMonthWeeks(monthEndTime: Long): List<CountRecord>
+    fun getTasksFinishedCountInMonthWeeks(monthStartTime: Long, monthEndTime: Long): List<CountRecord>
 
     @Query("SELECT :monthEndTime")
     fun getTest(monthEndTime: Long): Long

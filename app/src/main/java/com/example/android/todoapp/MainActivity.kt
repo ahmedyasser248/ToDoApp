@@ -1,6 +1,7 @@
 package com.example.android.todoapp
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -16,6 +17,8 @@ import com.example.android.todoapp.databinding.ActivityMainBinding
 import com.example.android.todoapp.database.AppDatabaseDao
 import com.example.android.todoapp.database.Category
 import com.example.android.todoapp.database.Task
+import com.example.android.todoapp.tracker.DatePickerFragment
+import com.example.android.todoapp.tracker.TrackerViewModel
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -26,9 +29,15 @@ class MainActivity : AppCompatActivity() {
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main +  viewModelJob)
 
+    companion object {
+        fun getApp() {
+            return
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val toolbar: androidx.appcompat.widget.Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
@@ -46,13 +55,14 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setupWithNavController(navController)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
-        val dataSource = AppDatabase.getInstance(application).appDatabaseDao
     }
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
+        }
+    }
 
         /*uiScope.launch {
             insertCat(Category(1, "Home", 0), dataSource)
@@ -110,9 +120,6 @@ class MainActivity : AppCompatActivity() {
             //get1(dataSource)
             get(cal.timeInMillis, dataSource)
         }*/
-
-    }
-
     override fun onStop() {
         super.onStop()
         viewModelJob.cancel()
@@ -136,14 +143,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun get(timeCon: Long, database: AppDatabaseDao){
+    private suspend fun get(database: AppDatabaseDao){
         withContext(Dispatchers.IO) {
             println("Offff")
-            val values= database.getTasksCountInMonthWeeks(timeCon)
-            println(values.toString())
-            /*for (value in values.value!!.iterator()) {
-                println(value)
-            }*/
+            val tasks = database.getTasksInfo()
+            for(task in tasks) {
+                println(task.taskId.toString() + " " + task.title + " " + task.listingTime + " " + task.status + " " + task.categoryId)
+            }
         }
     }
 
@@ -157,5 +163,10 @@ class MainActivity : AppCompatActivity() {
         withContext(Dispatchers.IO) {
             database.clearTasks()
         }
+    }
+
+    fun showDatePickerDialog(trackerViewModel: TrackerViewModel) {
+        val newFragment = DatePickerFragment(trackerViewModel)
+        newFragment.show(supportFragmentManager, "datePicker")
     }
 }
