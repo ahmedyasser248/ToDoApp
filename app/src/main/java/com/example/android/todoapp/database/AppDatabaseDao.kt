@@ -1,4 +1,5 @@
 package com.example.android.todoapp.database
+import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -80,5 +81,6 @@ interface AppDatabaseDao {
 
     @Query("SELECT * FROM category_table")
     fun getCategoriesInfo(): List<Category>
+
 
 }

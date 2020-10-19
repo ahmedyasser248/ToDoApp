@@ -32,11 +32,7 @@ class TasksViewModel (val database :AppDatabaseDao, application: Application):An
         return  category!!.categoryColor
     }
 
-   private suspend fun insert (task: Task){
-       withContext(Dispatchers.IO){
-           database.insert(task)
-       }
-   }
+
 
 
 }

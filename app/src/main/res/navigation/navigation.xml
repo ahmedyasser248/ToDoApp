@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_tasksFragment_to_tracker"
             app:destination="@id/tracker" />
+        <action
+            android:id="@+id/action_tasksFragment_to_addTaskFragment"
+            app:destination="@id/addTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/tracker"
@@ -21,4 +24,8 @@
             android:id="@+id/action_tracker_to_tasksFragment"
             app:destination="@id/tasksFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/addTaskFragment"
+        android:name="com.example.android.todoapp.addtasks.AddTaskFragment"
+        android:label="AddTaskFragment" />
 </navigation>

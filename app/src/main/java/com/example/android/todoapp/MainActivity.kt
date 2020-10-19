@@ -1,22 +1,33 @@
 package com.example.android.todoapp
 
+
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.android.todoapp.database.AppDatabase
-import com.example.android.todoapp.databinding.ActivityMainBinding
 import com.example.android.todoapp.database.AppDatabaseDao
 import com.example.android.todoapp.database.Category
 import com.example.android.todoapp.database.Task
-import kotlinx.coroutines.*
+import com.example.android.todoapp.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.tasksrecylerview.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -29,8 +40,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val toolbar: androidx.appcompat.widget.Toolbar = binding.toolbar
+        val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         drawer = binding.drawerLayout
         val toggle = ActionBarDrawerToggle(
             this, drawer, toolbar,
@@ -40,16 +52,21 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         val navController: NavController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.tasksFragment, R.id.tracker))
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.tasksFragment, R.id.tracker),drawer_layout)
         setupActionBarWithNavController(navController,appBarConfiguration)
+        toolbar.setupWithNavController(navController,appBarConfiguration)
         bottomNav.setupWithNavController(navController)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
         val dataSource = AppDatabase.getInstance(application).appDatabaseDao
     }
+
+
     override fun onBackPressed() {
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
+
         } else {
             super.onBackPressed()
 

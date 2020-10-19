@@ -43,18 +43,7 @@ class TasksFragment : Fragment() {
 
 
         binding.TasksList.adapter=adapter
-        val category=Category(0,"hello")
 
-        val task1=Task(0,"last try","hello, my name is ahmed yasser",0,4412,12443,1)
-        scope.launch {
-            withContext(Dispatchers.IO) {
-                Log.i("5th mesage","i got here also")
-                dataSource.insert(category)
-                dataSource.insert(task1)
-
-
-            }
-        }
 
         tasksViewModel.tasks.observe(viewLifecycleOwner, Observer {
           it?.let{
@@ -66,7 +55,7 @@ class TasksFragment : Fragment() {
 
         Log.i("2nd messgae","i completed it")
         binding.RoundedButton.setOnClickListener {v->
-            v.findNavController().navigate(R.id.add_task_fragment)
+            v.findNavController().navigate(R.id.action_tasksFragment_to_addTaskFragment)
 
         }
 
