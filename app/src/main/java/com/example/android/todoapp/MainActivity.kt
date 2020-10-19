@@ -1,25 +1,37 @@
 package com.example.android.todoapp
 
+
 import android.os.Bundle
 import android.view.View
+import android.util.Log
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.android.todoapp.database.AppDatabase
-import com.example.android.todoapp.databinding.ActivityMainBinding
 import com.example.android.todoapp.database.AppDatabaseDao
 import com.example.android.todoapp.database.Category
 import com.example.android.todoapp.database.Task
 import com.example.android.todoapp.tracker.DatePickerFragment
 import com.example.android.todoapp.tracker.TrackerViewModel
 import kotlinx.coroutines.*
+import com.example.android.todoapp.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.tasksrecylerview.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -39,8 +51,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val toolbar: androidx.appcompat.widget.Toolbar = binding.toolbar
+        val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         drawer = binding.drawerLayout
         val toggle = ActionBarDrawerToggle(
             this, drawer, toolbar,
@@ -50,27 +63,32 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         val navController: NavController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.tasksFragment, R.id.tracker))
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.tasksFragment, R.id.tracker),drawer_layout)
         setupActionBarWithNavController(navController,appBarConfiguration)
+        toolbar.setupWithNavController(navController,appBarConfiguration)
         bottomNav.setupWithNavController(navController)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
     }
+
+
     override fun onBackPressed() {
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
+
         } else {
             super.onBackPressed()
         }
     }
 
-        /*uiScope.launch {
+            /*uiScope.launch {
             insertCat(Category(1, "Home", 0), dataSource)
             insertCat(Category(2, "Work", 0), dataSource)
         }*/
 
 
-        val cal = Calendar.getInstance()
+            val cal = Calendar.getInstance()
 
 /*
         cal.set(Calendar.DAY_OF_MONTH, 1)
@@ -114,7 +132,7 @@ class MainActivity : AppCompatActivity() {
             insert(task5, dataSource)
         }*/
 
-        /*cal.set(Calendar.DAY_OF_MONTH, 1)
+            /*cal.set(Calendar.DAY_OF_MONTH, 1)
         cal.add(Calendar.MONTH, 1)
         uiScope.launch {
             //get1(dataSource)
@@ -125,23 +143,23 @@ class MainActivity : AppCompatActivity() {
         viewModelJob.cancel()
     }
 
-    private suspend fun insert(task: Task, database: AppDatabaseDao){
-        withContext(Dispatchers.IO) {
-            println(task.categoryId)
-            database.insert(task)
+        private suspend fun insert(task: Task, database: AppDatabaseDao) {
+            withContext(Dispatchers.IO) {
+                println(task.categoryId)
+                database.insert(task)
+            }
         }
-    }
 
-    private suspend fun get1(database: AppDatabaseDao){
-        withContext(Dispatchers.IO) {
-            println("Offff")
-            val values= database.getAllTasks()
-            println(values.toString())
-            /*for (value in values.value!!.iterator()) {
+        private suspend fun get1(database: AppDatabaseDao) {
+            withContext(Dispatchers.IO) {
+                println("Offff")
+                val values = database.getAllTasks()
+                println(values.toString())
+                /*for (value in values.value!!.iterator()) {
                 println(value)
             }*/
+            }
         }
-    }
 
     private suspend fun get(database: AppDatabaseDao){
         withContext(Dispatchers.IO) {
@@ -151,22 +169,16 @@ class MainActivity : AppCompatActivity() {
                 println(task.taskId.toString() + " " + task.title + " " + task.listingTime + " " + task.status + " " + task.categoryId)
             }
         }
-    }
 
-    private suspend fun insertCat(category: Category, database: AppDatabaseDao){
-        withContext(Dispatchers.IO) {
-            database.insert(category)
+        private suspend fun insertCat(category: Category, database: AppDatabaseDao) {
+            withContext(Dispatchers.IO) {
+                database.insert(category)
+            }
+        }
+
+        private suspend fun clear(database: AppDatabaseDao) {
+            withContext(Dispatchers.IO) {
+                database.clearTasks()
+            }
         }
     }
-
-    private suspend fun clear(database: AppDatabaseDao){
-        withContext(Dispatchers.IO) {
-            database.clearTasks()
-        }
-    }
-
-    fun showDatePickerDialog(trackerViewModel: TrackerViewModel) {
-        val newFragment = DatePickerFragment(trackerViewModel)
-        newFragment.show(supportFragmentManager, "datePicker")
-    }
-}
