@@ -36,10 +36,10 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityMainBinding
-    private lateinit var drawer:DrawerLayout
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var drawer: DrawerLayout
     private var viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main +  viewModelJob)
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     companion object {
         fun getApp() {
@@ -59,13 +59,14 @@ class MainActivity : AppCompatActivity() {
             this, drawer, toolbar,
             R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
-        val bottomNav= binding.bottomNavigationView
+        val bottomNav = binding.bottomNavigationView
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         val navController: NavController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.tasksFragment, R.id.tracker),drawer_layout)
-        setupActionBarWithNavController(navController,appBarConfiguration)
-        toolbar.setupWithNavController(navController,appBarConfiguration)
+        val appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.tasksFragment, R.id.tracker), drawer_layout)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        toolbar.setupWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
@@ -82,13 +83,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-            /*uiScope.launch {
+    /*uiScope.launch {
             insertCat(Category(1, "Home", 0), dataSource)
             insertCat(Category(2, "Work", 0), dataSource)
         }*/
 
 
-            val cal = Calendar.getInstance()
+    val cal = Calendar.getInstance()
 
 /*
         cal.set(Calendar.DAY_OF_MONTH, 1)
@@ -132,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             insert(task5, dataSource)
         }*/
 
-            /*cal.set(Calendar.DAY_OF_MONTH, 1)
+    /*cal.set(Calendar.DAY_OF_MONTH, 1)
         cal.add(Calendar.MONTH, 1)
         uiScope.launch {
             //get1(dataSource)
@@ -143,32 +144,33 @@ class MainActivity : AppCompatActivity() {
         viewModelJob.cancel()
     }
 
-        private suspend fun insert(task: Task, database: AppDatabaseDao) {
-            withContext(Dispatchers.IO) {
-                println(task.categoryId)
-                database.insert(task)
-            }
+    private suspend fun insert(task: Task, database: AppDatabaseDao) {
+        withContext(Dispatchers.IO) {
+            println(task.categoryId)
+            database.insert(task)
         }
+    }
 
-        private suspend fun get1(database: AppDatabaseDao) {
-            withContext(Dispatchers.IO) {
-                println("Offff")
-                val values = database.getAllTasks()
-                println(values.toString())
-                /*for (value in values.value!!.iterator()) {
+    private suspend fun get1(database: AppDatabaseDao) {
+        withContext(Dispatchers.IO) {
+            println("Offff")
+            val values = database.getAllTasks()
+            println(values.toString())
+            /*for (value in values.value!!.iterator()) {
                 println(value)
             }*/
-            }
         }
+    }
 
-    private suspend fun get(database: AppDatabaseDao){
+    private suspend fun get(database: AppDatabaseDao) {
         withContext(Dispatchers.IO) {
             println("Offff")
             val tasks = database.getTasksInfo()
-            for(task in tasks) {
+            for (task in tasks) {
                 println(task.taskId.toString() + " " + task.title + " " + task.listingTime + " " + task.status + " " + task.categoryId)
             }
         }
+    }
 
         private suspend fun insertCat(category: Category, database: AppDatabaseDao) {
             withContext(Dispatchers.IO) {
