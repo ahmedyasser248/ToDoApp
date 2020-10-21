@@ -7,4 +7,7 @@
     <string name="title">Write a title ..</string>
     <string name="discreption_edittext">write yout discreption for the task ..</string>
     <string name="add">Add</string>
+    <string name="colorButton">Add color</string>
+    <string name="write_here_to_add_a_category">write here to add a category</string>
+    <string name="add_category_button_string">Add Category</string>
 </resources>

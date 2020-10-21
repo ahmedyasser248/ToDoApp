@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
 <RelativeLayout
     android:id="@+id/add_task_fragment"
     android:layout_width="match_parent"
@@ -16,7 +17,7 @@
         android:layout_alignParentTop="true"
         app:helperText="*title for your task"
         app:helperTextEnabled="true"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         >
 
     <com.google.android.material.textfield.TextInputEditText
@@ -32,8 +33,7 @@
        android:layout_below="@id/edit_text_layout_title"
        app:helperText="*enter your description"
        app:helperTextEnabled="true"
-       
-       android:layout_marginBottom="25dp"
+       android:layout_marginBottom="16dp"
 
        >
 
@@ -41,24 +41,64 @@
            android:id="@+id/edit_text_description"
            android:layout_width="match_parent"
            android:layout_height="match_parent"
-           android:minHeight="90dp"
+           android:minHeight="150dp"
            android:hint="@string/discreption_edittext">
 
        </com.google.android.material.textfield.TextInputEditText>
    </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editText_category_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/categroy_spinner"
+        android:layout_above="@id/add_category_button"
+
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editText_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxHeight="70dp"
+            android:minHeight="30dp"
+            android:hint="@string/write_here_to_add_a_category"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Spinner
         android:id="@+id/categroy_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_layout_description" />
+        android:layout_below="@id/edit_text_layout_description"
+        android:layout_margin="8dp"
+        android:minHeight="30dp"
+        />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add_color_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/add_button"
+        android:layout_alignParentStart="true"
+        android:enabled="false"
+        android:text="@string/colorButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add_category_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/add_button"
+        android:layout_alignParentEnd="true"
+        android:enabled="false"
+        android:text="@string/add_category_button_string" />
     <Button
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="16dp"
         android:text="@string/add" />

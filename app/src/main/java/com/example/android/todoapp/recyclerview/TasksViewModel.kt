@@ -11,7 +11,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TasksViewModel (val database :AppDatabaseDao, application: Application):AndroidViewModel(application) {
+class TasksViewModel (val database : AppDatabaseDao, application: Application):AndroidViewModel(application) {
+    //the categories in database
+    val categories=database.getAllCategories()
     // the tasks in database
     val tasks=database.getAllTasks()
     //selected task

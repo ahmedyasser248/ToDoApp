@@ -12,19 +12,17 @@ import com.example.android.todoapp.database.Category
 import com.example.android.todoapp.database.Task
 import com.example.android.todoapp.databinding.ListItemTaskBinding
 
-class TasksAdapter (private val clickListener :TaskListener, private val databaseDao: AppDatabaseDao): ListAdapter<Task, TasksAdapter.ViewHolder>(TaskDiffCallback()){
+class TasksAdapter (private val clickListener :TaskListener): ListAdapter<Task, TasksAdapter.ViewHolder>(TaskDiffCallback()){
 
 
-    private val categories=databaseDao.getAllCategories()
+    lateinit var categories : List<Category>
     private  lateinit var category:Category
     class ViewHolder private constructor(val binding: ListItemTaskBinding):RecyclerView.ViewHolder(binding.root) {
       fun bind(clickListener:TaskListener,item: Task,category : Category?){
           val color=category?.categoryColor
           binding.task=item
           binding.clickListener=clickListener
-            if(color != null){
-          binding.theCard.setCardBackgroundColor(color.toInt())
-            }
+          binding.category=category
           Log.i("3rd messgae","i completed it")
           binding.executePendingBindings()
     }
@@ -59,8 +57,11 @@ class TasksAdapter (private val clickListener :TaskListener, private val databas
         /*it may throw  a null exception in some exceptions but could be handled using elvis
         * operator
         * */
-        //category= categories.value!![item.categoryId.toInt()]
-        holder.bind( clickListener,item ,null )
+
+        val resultCategory = categories.find { Category ->
+            Category.categoryId==item.categoryId
+        }
+             holder.bind( clickListener,item , resultCategory)
     }
 
 }

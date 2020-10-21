@@ -39,7 +39,10 @@ class TasksFragment : Fragment() {
 
         binding.lifecycleOwner=this
 
-        val adapter = TasksAdapter(TaskListener { taskId ->tasksViewModel.onTaskClicked(taskId)  },dataSource)
+        val adapter = TasksAdapter(TaskListener { taskId ->tasksViewModel.onTaskClicked(taskId)  })
+        tasksViewModel.categories.observe(viewLifecycleOwner, Observer {
+            adapter.categories=it
+        })
 
 
         binding.TasksList.adapter=adapter
