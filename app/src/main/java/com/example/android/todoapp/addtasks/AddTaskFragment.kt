@@ -4,33 +4,20 @@ package com.example.android.todoapp.addtasks
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.android.todoapp.R
 import com.example.android.todoapp.database.AppDatabase
-import com.example.android.todoapp.database.AppDatabaseDao
 import com.example.android.todoapp.database.Category
-import com.example.android.todoapp.database.Task
 import com.example.android.todoapp.databinding.AddtaskfragentBinding
-
 import dev.sasikanth.colorsheet.ColorSheet
-import dev.sasikanth.colorsheet.utils.ColorSheetUtils
-import kotlinx.android.synthetic.main.addtaskfragent.view.*
 import kotlinx.coroutines.*
-
 class AddTaskFragment : Fragment() ,AdapterView.OnItemSelectedListener {
 
     val scope = CoroutineScope(Job() + Dispatchers.IO)
@@ -68,6 +55,8 @@ class AddTaskFragment : Fragment() ,AdapterView.OnItemSelectedListener {
             spinner.adapter = madapter
         })
         spinner.onItemSelectedListener = this
+
+
         binding.addButton.setOnClickListener {
             if (binding.editTextTitle.text.toString().trim().isEmpty()) {
                 return@setOnClickListener
@@ -77,11 +66,13 @@ class AddTaskFragment : Fragment() ,AdapterView.OnItemSelectedListener {
             }
             addViewModel.getTaskData(
                 0, binding.editTextTitle.text.toString(),
-                binding.editTextDescription.text.toString(), 0, System.currentTimeMillis(),
-                System.currentTimeMillis(), category.categoryId
+                binding.editTextDescription.text.toString(), 0.toShort(), System.currentTimeMillis(),
+                0, category.categoryId
             )
             addViewModel.onAddTask()
         }
+
+
         binding.addCategoryButton.setOnClickListener {
         addViewModel.getCategoryData(binding.editTextCategory.text.toString(), selectedColor.toLong())
             addViewModel.onAddCategory()

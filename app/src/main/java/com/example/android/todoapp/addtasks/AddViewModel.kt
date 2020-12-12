@@ -16,6 +16,7 @@ import kotlinx.coroutines.withContext
 
 class AddViewModel(val database : AppDatabaseDao, application: Application): AndroidViewModel(application) {
     val categories = database.getAllCategories()
+
     private lateinit var category: Category
     private lateinit var task:Task
 
@@ -37,6 +38,7 @@ class AddViewModel(val database : AppDatabaseDao, application: Application): And
             database.insert(category)
         }
     }
+
     //will be used in fragment
     fun onAddTask(){
         viewModelScope.launch {
@@ -49,7 +51,6 @@ class AddViewModel(val database : AppDatabaseDao, application: Application): And
             insert(category)
         }
     }
-
 
 
 

@@ -3,6 +3,7 @@ package com.example.android.todoapp.recyclerview
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,20 +12,49 @@ import com.example.android.todoapp.database.AppDatabaseDao
 import com.example.android.todoapp.database.Category
 import com.example.android.todoapp.database.Task
 import com.example.android.todoapp.databinding.ListItemTaskBinding
+import kotlinx.coroutines.*
 
-class TasksAdapter (private val clickListener :TaskListener): ListAdapter<Task, TasksAdapter.ViewHolder>(TaskDiffCallback()){
-
-
+class TasksAdapter (private val clickListener :TaskListener,val database: AppDatabaseDao): ListAdapter<Task, TasksAdapter.ViewHolder>(TaskDiffCallback()){
     lateinit var categories : List<Category>
-    private  lateinit var category:Category
     class ViewHolder private constructor(val binding: ListItemTaskBinding):RecyclerView.ViewHolder(binding.root) {
-      fun bind(clickListener:TaskListener,item: Task,category : Category?){
-          val color=category?.categoryColor
+
+        private val scope = CoroutineScope(Dispatchers.IO+ Job())
+
+        fun bind(clickListener:TaskListener,item: Task,category : Category?,database: AppDatabaseDao){
+
           binding.task=item
           binding.clickListener=clickListener
           binding.category=category
-          Log.i("3rd messgae","i completed it")
+          binding.checkBox.setOnCheckedChangeListener(null)
+          binding.checkBox.isChecked = item.status!=0.toShort()
+          binding.checkBox.setOnClickListener{
+            if(item.status == 2.toShort()){
+               item.status = 0.toShort()
+            }
+            else if (item.status==0.toShort())
+            {
+               item.status = 2.toShort()
+            }
+            scope.launch {
+                  database.update(item)
+            }
+          }
           binding.executePendingBindings()
+            if(item.dequeueTime != 0.toLong()){
+                binding.root.visibility=View.GONE
+                binding.theCard.visibility=View.GONE
+                binding.checkBox.visibility=View.GONE
+                binding.DescriptionText.visibility=View.GONE
+                binding.TitleText.visibility=View.GONE
+                binding.theConstraint.visibility=View.GONE
+            }else{
+                binding.root.visibility=View.VISIBLE
+                binding.theCard.visibility=View.VISIBLE
+                binding.checkBox.visibility=View.VISIBLE
+                binding.DescriptionText.visibility=View.VISIBLE
+                binding.TitleText.visibility=View.VISIBLE
+                binding.theConstraint.visibility=View.VISIBLE
+            }
     }
         companion object{
             fun from(parent: ViewGroup):ViewHolder{
@@ -53,18 +83,18 @@ class TasksAdapter (private val clickListener :TaskListener): ListAdapter<Task, 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         val item=getItem(position)
-        /*it may throw  a null exception in some exceptions but could be handled using elvis
-        * operator
-        * */
+
 
         val resultCategory = categories.find { Category ->
             Category.categoryId==item.categoryId
         }
-             holder.bind( clickListener,item , resultCategory)
+        holder.bind( clickListener,item , resultCategory,database)
     }
 
 }
+
 class TaskListener(val clickListener : (taskId : Long) -> Unit){
     fun onClick(task : Task)=clickListener(task.taskId)
 }
